@@ -290,7 +290,6 @@ class TaskPersistence {
   static Future<Map<String, dynamic>> getStorageStats() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final tasksList = prefs.getStringList(_tasksKey) ?? <String>[];
       final tasks = await loadAllTasks();
 
       int activeCount = 0;

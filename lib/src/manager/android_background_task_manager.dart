@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../models/exceptions.dart';
 import '../models/task_options.dart';
@@ -440,7 +441,7 @@ class AndroidBackgroundTaskManager {
       }
     } catch (e) {
       // Log error but don't throw - this is not critical for initialization
-      print('Warning: Failed to load scheduled tasks: $e');
+      debugPrint('Warning: Failed to load scheduled tasks: $e');
     }
   }
 

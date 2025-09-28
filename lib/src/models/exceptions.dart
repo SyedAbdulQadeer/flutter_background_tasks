@@ -2,6 +2,7 @@
 ///
 /// These exceptions provide clear, descriptive error messages to help developers
 /// understand what went wrong and how to fix it.
+library;
 
 /// Base exception class for all Android Background Task Manager errors.
 abstract class AndroidBackgroundTaskException implements Exception {

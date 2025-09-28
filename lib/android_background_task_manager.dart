@@ -18,6 +18,8 @@
 /// ```dart
 /// import 'package:android_background_task_manager/android_background_task_manager.dart';
 ///
+library android_background_task_manager;
+
 /// void main() async {
 ///   // Initialize the manager
 ///   await AndroidBackgroundTaskManager.initialize();
