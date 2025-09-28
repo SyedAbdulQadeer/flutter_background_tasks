@@ -1,9 +1,9 @@
 name: android_background_task_manager
 description: "A Flutter package for managing background tasks on Android using WorkManager and AlarmManager."
 version: 1.0.0
-homepage: git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git
-repository: git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git
-issue_tracker: git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git/issues
+homepage: https://github.com/SyedAbdulQadeer/flutter_background_tasks.git
+repository: https://github.com/SyedAbdulQadeer/flutter_background_tasks.git
+issue_tracker: https://github.com/SyedAbdulQadeer/flutter_background_tasks.git/issues
 
 environment:
   sdk: ^3.8.1
