@@ -1,0 +1,28 @@
+name: android_background_task_manager_example
+description: Example app demonstrating Android Background Task Manager usage.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # The package being demonstrated
+  android_background_task_manager:
+    path: ../
+  
+  # Additional dependencies for the example
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
