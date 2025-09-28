@@ -1,10 +1,33 @@
-# Android Background Task Manager
+# Flutter Background Tasks
 
-[![pub package](https://img.shields.io/pub/v/android_background_task_manager.svg)](https://pub.dev/packages/android_background_task_manager)
+[![pub package](https://img.shields.io/pub/v/flutter_background_tasks.svg)](https://pub.dev/packages/flutter_background_tasks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git/workflows/CI/badge.svg)](git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git/actions)
+[![Build Status](https://github.com/SyedAbdulQadeer/flutter_background_tasks/workflows/CI/badge.svg)](https://github.com/SyedAbdulQadeer/flutter_background_tasks/actions)
 
 A Flutter package for managing background tasks on Android using WorkManager and AlarmManager. This package provides a unified API for scheduling and managing background tasks without needing to touch native Android code.
+
+## Quick Start
+
+```dart
+// 1. Initialize in main()
+await AndroidBackgroundTaskManager.initialize();
+
+// 2. Register a task callback
+AndroidBackgroundTaskManager.registerTask('my_task', (taskId, data) async {
+  print('Background task executed: $taskId');
+  // Your background work here
+});
+
+// 3. Schedule the task
+await AndroidBackgroundTaskManager.scheduleTask(TaskOptions(
+  id: 'my_task',
+  periodic: true,
+  frequency: Duration(minutes: 15), // Minimum 15 minutes
+));
+
+// 4. Get task results later
+String? result = await AndroidBackgroundTaskManager.getTaskResult('my_task');
+```
 
 ## Features
 
@@ -12,7 +35,8 @@ A Flutter package for managing background tasks on Android using WorkManager and
 - **⏰ Flexible Scheduling**: Schedule one-time or periodic tasks with various constraints
 - **🔒 Reliable Execution**: Uses WorkManager for reliable background execution
 - **💾 Local Persistence**: Tracks task state across app restarts
-- **🛡️ Error Handling**: Comprehensive error handling with descriptive exceptions
+- **� Task Results**: Retrieve and monitor background task execution results
+- **�🛡️ Error Handling**: Comprehensive error handling with descriptive exceptions
 - **🧪 Testing Support**: Built-in support for testing and debugging
 - **📱 Android Only**: Optimized specifically for Android platform
 
@@ -28,13 +52,38 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  android_background_task_manager: ^1.0.0
+  flutter_background_tasks: ^1.0.0
 ```
 
 Then run:
 
 ```bash
 flutter pub get
+```
+
+### Android Setup
+
+Add the following permissions to your `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
+
+For Android 12+ (API 31+), you may also need:
+
+```xml
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+```
+
+### Proguard Rules
+
+If you're building a release APK with code obfuscation, add these rules to your `android/app/proguard-rules.pro`:
+
+```
+-keep class com.example.flutter_background_tasks.** { *; }
+-keep class androidx.work.** { *; }
 ```
 
 ## Usage
@@ -44,7 +93,7 @@ flutter pub get
 First, initialize the Android Background Task Manager in your `main()` function:
 
 ```dart
-import 'package:android_background_task_manager/android_background_task_manager.dart';
+import 'package:flutter_background_tasks/flutter_background_tasks.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,11 +135,11 @@ AndroidBackgroundTaskManager.registerTask('send_notification', (taskId, data) as
 Schedule tasks with various options:
 
 ```dart
-// Schedule a periodic task (runs every 30 minutes)
+// Schedule a periodic task (runs every 30 minutes - minimum 15 minutes required)
 await AndroidBackgroundTaskManager.scheduleTask(TaskOptions(
   id: 'data_sync',
   periodic: true,
-  frequency: Duration(minutes: 30),
+  frequency: Duration(minutes: 30), // Minimum 15 minutes for periodic tasks
   initialDelay: Duration(seconds: 10),
   requiresCharging: false,
   requiresWifi: true, // Only run on WiFi
@@ -130,6 +179,29 @@ await AndroidBackgroundTaskManager.cancelAllTasks();
 
 // Execute a task immediately (for testing)
 await AndroidBackgroundTaskManager.executeTaskNow('data_sync');
+```
+
+### 5. Monitor Task Results
+
+Background tasks store their execution results which you can retrieve:
+
+```dart
+// Get all completed task results
+Map<String, String> allResults = await AndroidBackgroundTaskManager.getTaskResults();
+print('All task results: $allResults');
+
+// Get result of a specific task
+String? taskResult = await AndroidBackgroundTaskManager.getTaskResult('data_sync');
+if (taskResult != null) {
+  print('Data sync result: $taskResult');
+}
+
+// Clear all stored task results (for cleanup)
+await AndroidBackgroundTaskManager.clearTaskResults();
+```
+
+**Note**: Task results are stored by the native Android implementation when background tasks complete. Since background tasks run in worker threads, they cannot directly communicate with Flutter. Instead, they store results in shared preferences which can be retrieved when the Flutter app is active.
+
 ```
 
 ## Task Options
@@ -266,7 +338,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
 
 If you encounter any issues or have questions, please:
 
-1. Check the [Issues](git remote add origin https://github.com/SyedAbdulQadeer/flutter_background_tasks.git/issues) page
+1. Check the [Issues](https://github.com/SyedAbdulQadeer/flutter_background_tasks/issues) page
 2. Create a new issue with detailed information
 3. Include Flutter version, Android API level, and error logs
 
